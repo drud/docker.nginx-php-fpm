@@ -40,6 +40,9 @@ var flWait = flag.Int("wait", envInt("GIT_SYNC_WAIT", 0), "number of seconds to 
 var flOneTime = flag.Bool("one-time", envBool("GIT_SYNC_ONE_TIME", false), "exit after the initial checkout")
 var flDepth = flag.Int("depth", envInt("GIT_SYNC_DEPTH", 0), "shallow clone with a history truncated to the specified number of commits")
 
+var flSymlinkSrc = flag.String("sym-src", envString("SYMLINK_SRC", ""), "create a symlink from this source")
+var flSymlinkDest = flag.String("sym-dest", envString("SYMLINK_DEST", ""), "create a symlink to this destination")
+
 var flMaxSyncFailures = flag.Int("max-sync-failures", envInt("GIT_SYNC_MAX_SYNC_FAILURES", 0),
 	`number of consecutive failures allowed before aborting (the first pull must succeed)`)
 
@@ -96,6 +99,10 @@ func main() {
 		if err := setupGitAuth(*flUsername, *flPassword, *flRepo); err != nil {
 			log.Fatalf("error creating .netrc file: %v", err)
 		}
+	}
+
+	if (*flSymlinkDest != "" && *flSymlinkSrc == "") || (*flSymlinkDest == "" && *flSymlinkSrc != "") {
+		log.Fatalf("If sym-src or sym-dest is provided, both must be.")
 	}
 
 	initialSync := true
@@ -165,6 +172,14 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 	}
 
 	log.Printf("reset %q: %v", rev, string(output))
+
+	if *flSymlinkSrc != "" && *flSymlinkDest != "" {
+		output, err = runCommand("ln", "", []string{"-s", *flSymlinkSrc, *flSymlinkDest})
+		if err != nil {
+			return err
+		}
+		log.Printf("symlink files.")
+	}
 
 	if *flChmod != 0 {
 		// set file permissions
