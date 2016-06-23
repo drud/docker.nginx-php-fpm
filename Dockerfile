@@ -82,8 +82,8 @@ ADD scripts/push /usr/bin/push
 RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
 
-# copy in code
-ADD src/ /var/www/html/
+# Symlink docroot to html directory.
+RUN ln -s /var/www/docroot /var/www/html
 
 EXPOSE 443 80
 
