@@ -176,9 +176,8 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 	if *flSymlinkSrc != "" && *flSymlinkDest != "" {
 		if _, err := os.Stat(*flSymlinkDest); os.IsNotExist(err) {
 
-			err := os.Symlink(*flSymlinkSrc, *flSymlinkDest)
-			if err != nil {
-				return fmt.Errorf("error creating symlink: %v", err)
+			if err := os.Symlink(*flSymlinkSrc, *flSymlinkDest); os.IsExist(err) {
+				// symlink already exists, do nothing.
 			}
 
 			log.Printf("symlink files.")
