@@ -83,7 +83,7 @@ RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
 
 # Symlink docroot to html directory.
-RUN ln -s /var/www/docroot /var/www/html
+RUN rm -rf /var/www/html && ln -s /var/www/docroot /var/www/html
 
 EXPOSE 443 80
 
