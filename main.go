@@ -16,7 +16,7 @@ limitations under the License.
 
 // git-sync is a command that pull a git repository to a local directory.
 
-package main // import "k8s.io/contrib/git-sync"
+package main
 
 import (
 	"bytes"
@@ -30,6 +30,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/drud/docker.git-sync/config"
+	"github.com/drud/docker.git-sync/model"
 )
 
 var flRepo = flag.String("repo", envString("GIT_SYNC_REPO", ""), "git repo url")
@@ -51,6 +54,9 @@ var flPassword = flag.String("password", envString("GIT_SYNC_PASSWORD", ""), "pa
 
 var flChmod = flag.Int("change-permissions", envInt("GIT_SYNC_PERMISSIONS", 0), `If set it will change the permissions of the directory 
 		that contains the git repository. Example: 744`)
+
+var flTemplate = flag.String("template", envString("DEPLOY_TEMPLATE", ""), `The template of this deployment. If 'drupal', will create settings.php file 
+        if wordpress, will create a wp-config.php file.`)
 
 func envString(key, def string) string {
 	if env := os.Getenv(key); env != "" {
@@ -173,6 +179,7 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 
 	log.Printf("reset %q: %v", rev, string(output))
 
+	// Create symlink for files directory.
 	if *flSymlinkSrc != "" && *flSymlinkDest != "" {
 		if _, err := os.Stat(*flSymlinkDest); os.IsNotExist(err) {
 
@@ -181,6 +188,28 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 			}
 
 			log.Printf("symlink files.")
+		}
+	}
+
+	// Create the Drupal/WP config file.
+	if *flTemplate != "" {
+		filepath := ""
+		if *flTemplate == "drupal" {
+			log.Printf("Drupal site. Creating settings.php file.")
+			filepath = "/code/docroot/sites/default/settings.php"
+			drupalConfig := model.NewDrupalConfig()
+			err = config.WriteDrupalConfig(drupalConfig, filepath)
+			if err != nil {
+				return err
+			}
+		} else if *flTemplate == "wordpress" {
+			log.Printf("Wordpress site. Creating wp-confg.php file.")
+			filepath = "/code/docroot/wp-config.php"
+			wpConfig := model.NewWordpressConfig()
+			err = config.WriteWordpressConfig(wpConfig, filepath)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
