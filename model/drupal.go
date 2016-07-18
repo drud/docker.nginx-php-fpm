@@ -17,8 +17,8 @@ type DrupalConfig struct {
 func NewDrupalConfig() *DrupalConfig {
 	return &DrupalConfig{
 		DatabaseName:     "data",
-		DatabaseUsername: "root",
-		DatabasePassword: "root",
+		DatabaseUsername: "drud",
+		DatabasePassword: "drud",
 		DatabaseHost:     "127.0.0.1",
 		DatabaseDriver:   "mysql",
 		DatabasePort:     3306,
