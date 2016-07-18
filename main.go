@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path"
@@ -90,6 +91,8 @@ func envInt(key string, def int) int {
 }
 
 const usage = "usage: GIT_SYNC_REPO= GIT_SYNC_DEST= [GIT_SYNC_BRANCH= GIT_SYNC_WAIT= GIT_SYNC_DEPTH= GIT_SYNC_USERNAME= GIT_SYNC_PASSWORD= GIT_SYNC_ONE_TIME= GIT_SYNC_MAX_SYNC_FAILURES=] git-sync -repo GIT_REPO_URL -dest PATH [-branch -wait -username -password -depth -one-time -max-sync-failures]"
+
+var oldRevision, currentRevision string
 
 func main() {
 	flag.Parse()
@@ -162,7 +165,6 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 	case err != nil:
 		return fmt.Errorf("error checking if repo exist %q: %v", gitRepoPath, err)
 	}
-
 	// fetch branch
 	output, err := runCommand("git", dest, []string{"pull", "origin", branch})
 	if err != nil {
@@ -221,6 +223,23 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 		}
 	}
 
+	currentRevision, err = getCurrentRevision(dest)
+	if currentRevision != oldRevision {
+		// do something
+		log.Println("Time to run cache clears and updates!")
+		resp, err := http.Get("http://localhost:1337/deploy")
+
+		if err != nil {
+			log.Printf("Could not perform post-deployment steps. %s\n", err)
+		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode == http.StatusOK {
+			oldRevision = currentRevision
+			log.Printf("Post-deployment complete. HEAD is now at %s\n", currentRevision)
+		}
+	}
+
 	return nil
 }
 
@@ -259,4 +278,9 @@ func setupGitAuth(username, password, gitURL string) error {
 	}
 
 	return nil
+}
+
+func getCurrentRevision(dest string) (string, error) {
+	out, err := runCommand("git", dest, []string{"rev-parse", "HEAD"})
+	return string(out), err
 }
