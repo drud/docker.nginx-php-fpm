@@ -26,8 +26,8 @@ func NewWordpressConfig() *WordpressConfig {
 	return &WordpressConfig{
 		WPGeneric:        false,
 		DatabaseName:     "data",
-		DatabaseUsername: "drud",
-		DatabasePassword: "drud",
+		DatabaseUsername: "root",
+		DatabasePassword: "root",
 		DatabaseHost:     "127.0.0.1",
 		Docroot:          "/var/www/html/docroot",
 		TablePrefix:      "wp_",
