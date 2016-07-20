@@ -82,6 +82,8 @@ ADD scripts/push /usr/bin/push
 RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
 
+USER nginx
+
 EXPOSE 443 80
 
 #CMD ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisord.conf"]
