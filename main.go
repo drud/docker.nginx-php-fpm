@@ -225,7 +225,6 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 
 	currentRevision, err = getCurrentRevision(dest)
 	if currentRevision != oldRevision {
-		// do something
 		log.Println("Time to run cache clears and updates!")
 		resp, err := http.Get("http://localhost:1337/deploy")
 
