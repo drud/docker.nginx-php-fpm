@@ -53,4 +53,6 @@ if [[ "$TEMPLATE_NGINX_HTML" == "1" ]] ; then
 fi
 
 # Start supervisord and services
-/usr/bin/supervisord -n -c /etc/supervisord.conf
+/usr/bin/supervisord -c /etc/supervisord.conf
+echo 'Server started'
+tail -f /var/log/nginx/error.log
