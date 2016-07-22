@@ -91,7 +91,7 @@ ADD scripts/pull /usr/bin/pull
 ADD scripts/push /usr/bin/push
 RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
-RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx
+RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
 EXPOSE 443 80
 
