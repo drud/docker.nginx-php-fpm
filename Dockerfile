@@ -14,6 +14,7 @@ RUN apk add --no-cache bash \
     git \
     php5-fpm \
     php5-pdo \
+    libcap \
     php5-pdo_mysql \
     php5-mysql \
     php5-mysqli \
@@ -52,7 +53,15 @@ rm -Rf /var/www/* && \
 mkdir /var/www/html/
 ADD conf/nginx-site.conf /etc/nginx/sites-available/default.conf
 
-RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
+RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf \ 
+    && touch /var/log/php-fpm.log \
+    && chown nginx:nginx /var/log/php-fpm.log \
+    && chown -R nginx:nginx /var/run \
+    && touch /var/log/nginx/access.log \
+    && touch /var/log/nginx/error.log \
+    && chown -R nginx:nginx /var/log/nginx/ \ 
+    && touch /var/lib/nginx/logs/error.log \
+    && chown nginx:nginx /var/lib/nginx/logs/error.log
 
 # tweak php-fpm config
 RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" ${php_conf} && \
@@ -81,6 +90,7 @@ ADD scripts/pull /usr/bin/pull
 ADD scripts/push /usr/bin/push
 RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
+RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
 EXPOSE 443 80
 
