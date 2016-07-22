@@ -14,6 +14,7 @@ RUN apk add --no-cache bash \
     git \
     php5-fpm \
     php5-pdo \
+    libcap \
     php5-pdo_mysql \
     php5-mysql \
     php5-mysqli \
@@ -40,7 +41,6 @@ RUN apk add --no-cache bash \
     mkdir -p /var/log/supervisor 
 
 ADD conf/supervisord.conf /etc/supervisord.conf
-
 # Copy our nginx config
 RUN rm -Rf /etc/nginx/nginx.conf
 ADD conf/nginx.conf /etc/nginx/nginx.conf
@@ -52,7 +52,18 @@ mkdir -p /etc/nginx/ssl/ && \
 rm -Rf /var/www/* && \
 mkdir /var/www/html/
 ADD conf/nginx-site.conf /etc/nginx/sites-available/default.conf
-RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
+
+RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf \ 
+    && touch /var/log/php-fpm.log \
+    && chown nginx:nginx /var/log/php-fpm.log \
+    && chown -R nginx:nginx /var/run \
+    && touch /var/log/nginx/access.log \
+    && touch /var/log/nginx/error.log \
+    && chown -R nginx:nginx /var/log/nginx/ \ 
+    && touch /var/lib/nginx/logs/error.log \
+    && chown nginx:nginx /var/lib/nginx/logs/error.log \
+    && chmod 755 /var/lib/nginx/logs/error.log
+
 
 # tweak php-fpm config
 RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" ${php_conf} && \
@@ -74,15 +85,16 @@ sed -i -e "s/;listen.group = nobody/listen.group = nginx/g" ${fpm_conf} && \
 sed -i -e "s/listen = 127.0.0.1:9000/listen = \/var\/run\/php-fpm.sock/g" ${fpm_conf} &&\
 ln -s /etc/php5/php.ini /etc/php5/conf.d/php.ini && \
 find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
-
+    
 # Add Scripts
 ADD scripts/start.sh /start.sh
 ADD scripts/pull /usr/bin/pull
 ADD scripts/push /usr/bin/push
 RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
-
-USER nginx
+RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx
+RUN ln -sf /dev/stdout /var/log/nginx/access.log
+RUN ln -sf /dev/stderr /var/log/nginx/error.log
 
 EXPOSE 443 80
 
