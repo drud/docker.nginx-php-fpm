@@ -62,10 +62,7 @@ RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/defau
     && chown -R nginx:nginx /var/log/nginx/ \ 
     && touch /var/lib/nginx/logs/error.log \
     && chown nginx:nginx /var/lib/nginx/logs/error.log \
-    && chmod 755 /var/lib/nginx/logs/error.log \
-    && chown nginx:nginx /proc/self/fd/2 \
-    && chown nginx:nginx /proc/self/fd/1
-
+    && chmod 755 /var/lib/nginx/logs/error.log
 
 # tweak php-fpm config
 RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" ${php_conf} && \
