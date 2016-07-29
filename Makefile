@@ -1,7 +1,7 @@
 all: push
 
 # 0.0 shouldn't clobber any released builds
-TAG = latest
+TAG = drudsub
 PREFIX = drud/git-sync
 
 binary: main.go
