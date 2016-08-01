@@ -95,7 +95,6 @@ const usage = "usage: GIT_SYNC_REPO= GIT_SYNC_DEST= [GIT_SYNC_BRANCH= GIT_SYNC_W
 var oldRevision, currentRevision string
 
 func main() {
-	time.Sleep(5)
 	flag.Parse()
 	if *flRepo == "" || *flDest == "" {
 		flag.Usage()
