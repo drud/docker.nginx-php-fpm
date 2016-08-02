@@ -230,12 +230,13 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 
 		if err != nil {
 			log.Printf("Could not perform post-deployment steps. %s\n", err)
-		}
-		defer resp.Body.Close()
+		} else {
+			defer resp.Body.Close()
 
-		if resp.StatusCode == http.StatusOK {
-			oldRevision = currentRevision
-			log.Printf("Post-deployment complete. HEAD is now at %s\n", currentRevision)
+			if resp.StatusCode == http.StatusOK {
+				oldRevision = currentRevision
+				log.Printf("Post-deployment complete. HEAD is now at %s\n", currentRevision)
+			}
 		}
 	}
 
