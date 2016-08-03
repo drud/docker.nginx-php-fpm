@@ -8,7 +8,8 @@ RUN apt-get update && \
   apt-get clean -y && \
   rm -rf /var/lib/apt/lists/*
 
-COPY git-sync /git-sync
+COPY git-sync/git-sync /git-sync
+COPY liveness/liveness /liveness
 
 RUN mkdir /nonexistent && chmod 777 /nonexistent
 

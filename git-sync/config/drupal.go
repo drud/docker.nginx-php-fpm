@@ -5,7 +5,7 @@ import (
 	"text/template"
 
 	"github.com/Masterminds/sprig"
-	"github.com/drud/docker.git-sync/model"
+	"github.com/drud/docker.git-sync/git-sync/model"
 )
 
 const (

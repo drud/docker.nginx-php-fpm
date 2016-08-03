@@ -32,8 +32,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/drud/docker.git-sync/config"
-	"github.com/drud/docker.git-sync/model"
+	"github.com/drud/docker.git-sync/git-sync/config"
+	"github.com/drud/docker.git-sync/git-sync/model"
 )
 
 var flRepo = flag.String("repo", envString("GIT_SYNC_REPO", ""), "git repo url")
@@ -223,19 +223,22 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 		}
 	}
 
-	currentRevision, err = getCurrentRevision(dest)
-	if currentRevision != oldRevision {
-		log.Println("Time to run cache clears and updates!")
-		resp, err := http.Get("http://localhost:1337/deploy")
+	// If this is a templated deploy, run the post deploy steps.
+	if *flTemplate != "" {
+		currentRevision, err = getCurrentRevision(dest)
+		if currentRevision != oldRevision {
+			log.Println("Time to run cache clears and updates!")
+			resp, err := http.Get("http://localhost:1337/deploy")
 
-		if err != nil {
-			log.Printf("Could not perform post-deployment steps. %s\n", err)
-		} else {
-			defer resp.Body.Close()
+			if err != nil {
+				log.Printf("Could not perform post-deployment steps. %s\n", err)
+			} else {
+				defer resp.Body.Close()
 
-			if resp.StatusCode == http.StatusOK {
-				oldRevision = currentRevision
-				log.Printf("Post-deployment complete. HEAD is now at %s\n", currentRevision)
+				if resp.StatusCode == http.StatusOK {
+					oldRevision = currentRevision
+					log.Printf("Post-deployment complete. HEAD is now at %s\n", currentRevision)
+				}
 			}
 		}
 	}

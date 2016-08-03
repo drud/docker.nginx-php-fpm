@@ -4,8 +4,9 @@ all: push
 TAG = latest
 PREFIX = drud/git-sync
 
-binary: main.go
-	CGO_ENABLED=0 GOOS=linux godep go build -a -installsuffix cgo -ldflags '-w' -o git-sync
+binary: git-sync/main.go liveness/main.go
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-w' -o git-sync/git-sync ./git-sync/main.go
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-w' -o liveness/liveness ./liveness/main.go
 
 container: binary
 	docker build -t $(PREFIX):$(TAG) .
