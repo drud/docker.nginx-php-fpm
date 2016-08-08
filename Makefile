@@ -12,7 +12,7 @@ container: binary
 	docker build -t $(PREFIX):$(TAG) .
 
 push: container
-	gcloud docker push $(PREFIX):$(TAG)
+	docker push $(PREFIX):$(TAG)
 
 clean:
 	docker rmi -f $(PREFIX):$(TAG) || true
