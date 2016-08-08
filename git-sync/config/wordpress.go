@@ -35,16 +35,10 @@ define( 'DB_COLLATE', '' );
 // Site and WP URL's
 // =================
 if ( ! defined( 'WP_SITEURL' ) ) {
-  // define( 'WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . '/wp' );
-  {{ if $config.WPGeneric }}
-  define( 'WP_SITEURL', '{{ $config.DeployURL }}' );
-  {{ else }}
-  define( 'WP_SITEURL', '{{ $config.DeployURL }}/wp' );
-  {{ end }}
+  define( 'WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . '/wp' );
 }
 if ( ! defined( 'WP_HOME' ) ) {
-  // define( 'WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] );
-  define( 'WP_HOME', '{{ $config.DeployURL }}' );
+  define( 'WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] );
 }
 // ============================================
 // Custom Content Directory.
