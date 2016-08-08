@@ -52,6 +52,11 @@ if [[ "$TEMPLATE_NGINX_HTML" == "1" ]] ; then
   done
 fi
 
+# Ensure code and files dir is owned by nginx user and nginx can write to files volume mount.
+chown -Rf nginx.nginx /var/www/html/docroot
+chown -Rf nginx.nginx /files
+chmod 755 /files
+
 # Start supervisord and services
 /usr/bin/supervisord -c /etc/supervisord.conf
 echo 'Server started'
