@@ -118,8 +118,12 @@ func main() {
 	failCount := 0
 	for {
 		if err := syncRepo(*flRepo, *flDest, *flBranch, *flRev, *flDepth); err != nil {
-			if initialSync || failCount >= *flMaxSyncFailures {
+			if initialSync {
 				log.Fatalf("error syncing repo: %v", err)
+			}
+
+			if failCount >= *flMaxSyncFailures {
+				log.Printf("Could not sync repot after %d tries ", failCount)
 			}
 
 			failCount++
