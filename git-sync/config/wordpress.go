@@ -28,6 +28,9 @@ if ( ! defined( 'DB_HOST' ) )
 // ======================================================
 // Additonal DB settings, you do not want to change these
 // ======================================================
+if (file_exists(__DIR__ . '/custom.settings.php')) {
+  include __DIR__ . '/custom.settings.php';
+}
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
