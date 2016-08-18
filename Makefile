@@ -20,6 +20,6 @@ all: latest canary
 
 clean:
 	docker rmi -f $(PREFIX):$(TAG) || true
-	docker rmi -f $(PREFIX):latest
+	docker rmi -f $(PREFIX):latest || true
 	rm liveness/liveness
 	rm git-sync/git-sync
