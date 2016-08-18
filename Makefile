@@ -1,5 +1,3 @@
-all: push
-
 # 0.0 shouldn't clobber any released builds
 TAG = $(shell git rev-parse --abbrev-ref HEAD | tr -d '\n')
 PREFIX = drud/git-sync
