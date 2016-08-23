@@ -1,9 +1,12 @@
 package model
 
+import "os"
+
 // WordpressConfig encapsulates all the configurations for a Wordpress site.
 type WordpressConfig struct {
 	WPGeneric        bool
 	DeployName       string
+	DeployProtocol   string
 	DeployURL        string
 	DatabaseName     string
 	DatabaseUsername string
@@ -31,5 +34,7 @@ func NewWordpressConfig() *WordpressConfig {
 		DatabaseHost:     "127.0.0.1",
 		Docroot:          "/var/www/html/docroot",
 		TablePrefix:      "wp_",
+		DeployURL:        os.Getenv("DEPLOY_URL"),
+		DeployProtocol:   os.Getenv("DEPLOY_PROTOCOL"),
 	}
 }

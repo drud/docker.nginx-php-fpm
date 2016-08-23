@@ -38,10 +38,10 @@ define( 'DB_COLLATE', '' );
 // Site and WP URL's
 // =================
 if ( ! defined( 'WP_SITEURL' ) ) {
-  define( 'WP_SITEURL', 'http://' . $_SERVER['HTTP_HOST'] . '/wp' );
+  define( 'WP_SITEURL', '{{ $config.DeployProtocol }}://{{ $config.DeployURL }}/wp' );
 }
 if ( ! defined( 'WP_HOME' ) ) {
-  define( 'WP_HOME', 'http://' . $_SERVER['HTTP_HOST'] );
+  define( 'WP_HOME', '{{ $config.DeployProtocol }}://{{ $config.DeployURL }}' );
 }
 // ============================================
 // Custom Content Directory.
