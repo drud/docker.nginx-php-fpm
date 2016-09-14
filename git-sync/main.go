@@ -59,6 +59,16 @@ var flChmod = flag.Int("change-permissions", envInt("GIT_SYNC_PERMISSIONS", 0), 
 var flTemplate = flag.String("template", envString("DEPLOY_TEMPLATE", ""), `The template of this deployment. If 'drupal', will create settings.php file 
         if wordpress, will create a wp-config.php file.`)
 
+// wp specific values
+var authKey = flag.String("auth-key", envString("AUTH_KEY", ""), "auth key")
+var authSalt = flag.String("auth-salt", envString("AUTH_SALT", ""), "auth salt")
+var secureAuthKey = flag.String("secure-auth-key", envString("SECURE_AUTH_KEY", ""), "secure auth key")
+var secureAuthSalt = flag.String("secure-auth-salt", envString("SECURE_AUTH_SALT", ""), "secure auth salt")
+var loggedInKey = flag.String("logged-in-key", envString("LOGGED_IN_KEY", ""), "logged in key")
+var loggedInSalt = flag.String("logged-in-salt", envString("LOGGED_IN_SALT", ""), "logged in salt")
+var nonceKey = flag.String("nonce-key", envString("NONCE_KEY", ""), "nonce key")
+var nonceSalt = flag.String("nonce-salt", envString("NONCE_SALT", ""), "nonce salt")
+
 func envString(key, def string) string {
 	if env := os.Getenv(key); env != "" {
 		return env
@@ -212,6 +222,14 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 			log.Printf("Wordpress site. Creating wp-confg.php file.")
 			filepath = "/code/docroot/wp-config.php"
 			wpConfig := model.NewWordpressConfig()
+			wpConfig.AuthKey = *authKey
+			wpConfig.AuthSalt = *authSalt
+			wpConfig.LoggedInKey = *loggedInKey
+			wpConfig.LoggedInSalt = *loggedInSalt
+			wpConfig.SecureAuthKey = *secureAuthKey
+			wpConfig.SecureAuthSalt = *secureAuthSalt
+			wpConfig.NonceKey = *nonceKey
+			wpConfig.NonceSalt = *nonceSalt
 			err = config.WriteWordpressConfig(wpConfig, filepath)
 			if err != nil {
 				return err
