@@ -62,7 +62,22 @@ To pull a repository and specify a branch add the GIT_BRANCH environment variabl
 sudo docker run -d -e 'GIT_REPO=git@git.ngd.io:ngineered/ngineered-website.git' -e 'GIT_BRANCH=stage' -e 'SSH_KEY=BIG_LONG_BASE64_STRING_GOES_IN_HERE' richarvey/nginx-php-fpm
 ```
 
-### Enabling SSL or Special Nginx Configs
+### Enabling SSL
+Nginx needs three files to enable SSL: dhparam.pem, nginx.crt, and nginx.key.  You can create a self-signed version of nginx.crt and nginx.key if necessary.
+```
+mkdir ssl
+openssl req -x509 -nodes -sha256 -days 365 -newkey rsa:2048 -keyout ssl/nginx.key -out ssl/nginx.crt
+```
+The dhparam.pem file will take some time to generate.
+```
+openssl dhparam -out ssl/dhparam.pem 4096
+```
+Place these three files in a directory and mount it into the container.
+```
+docker run -d -v ./ssl:/etc/nginx/ssl drud/nginx-php-fpm /start.sh
+```
+
+### Enabling Special Nginx Configs
 You can either map a local folder containing your configs  to /etc/nginx or we recommend editing the files within __conf__ directory that are in the git repo, and then rebuilding the base image.
 
 ## Special Git Features
