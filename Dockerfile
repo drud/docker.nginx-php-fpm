@@ -96,6 +96,7 @@ RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
 RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
+WORKDIR /var/www/html/docroot
 EXPOSE 443 80
 
 CMD ["/start.sh"]
