@@ -14,6 +14,8 @@ RUN apk add --no-cache bash \
     git \
     php5-fpm \
     php5-pdo \
+    mysql-client \
+    rsync \
     libcap \
     php5-pdo_mysql \
     php5-mysql \
@@ -40,6 +42,7 @@ RUN apk add --no-cache bash \
     mkdir -p /run/nginx && \
     mkdir -p /var/log/supervisor 
 
+ADD conf/php.ini /etc/php5/
 ADD conf/supervisord.conf /etc/supervisord.conf
 # Copy our nginx config
 RUN rm -Rf /etc/nginx/nginx.conf
@@ -85,6 +88,7 @@ ln -s /etc/php5/php.ini /etc/php5/conf.d/php.ini && \
 find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
     
 # Add Scripts
+ADD scripts/mntwatch /usr/bin/
 ADD scripts/start.sh /start.sh
 ADD scripts/pull /usr/bin/pull
 ADD scripts/push /usr/bin/push
@@ -92,6 +96,7 @@ RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
 RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
+WORKDIR /var/www/html/docroot
 EXPOSE 443 80
 
 CMD ["/start.sh"]
