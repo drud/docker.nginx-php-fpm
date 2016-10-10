@@ -7,4 +7,4 @@ ADD files /
 
 # Install Drush using Composer.
 RUN composer global require drush/drush:"$DRUSH_VERSION" --prefer-dist && \
-  apk add mysql-client --update
+  apk add mysql-client rsync --update
