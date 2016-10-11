@@ -54,7 +54,7 @@ fi
 
 # Ensure code and files dir is owned by nginx user and nginx can write to files volume mount.
 cp -r /src/*  /var/www/html/
-chown -Rf nginx.nginx /var/www/html/docroot
+chown -Rf nginx.nginx /var/www/html
 #chown -Rf nginx.nginx /files
 #chmod 755 /files
 
