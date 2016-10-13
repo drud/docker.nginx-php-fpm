@@ -2,7 +2,7 @@ FROM alpine:3.4
 
 MAINTAINER ngineered <support@ngineered.co.uk>
 
-ENV php_conf /etc/php5/php.ini 
+ENV php_conf /etc/php5/php.ini
 ENV fpm_conf /etc/php5/php-fpm.conf
 
 RUN apk add --no-cache bash \
@@ -34,13 +34,14 @@ RUN apk add --no-cache bash \
     php5-openssl \
     php5-iconv \
     php5-json \
+    php5-soap \
     php5-phar \
     php5-dom && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     mkdir -p /etc/nginx && \
     mkdir -p /var/www/app && \
     mkdir -p /run/nginx && \
-    mkdir -p /var/log/supervisor 
+    mkdir -p /var/log/supervisor
 
 ADD conf/php.ini /etc/php5/
 ADD conf/supervisord.conf /etc/supervisord.conf
@@ -56,13 +57,13 @@ rm -Rf /var/www/* && \
 mkdir /var/www/html/
 ADD conf/nginx-site.conf /etc/nginx/sites-available/default.conf
 
-RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf \ 
+RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf \
     && touch /var/log/php-fpm.log \
     && chown nginx:nginx /var/log/php-fpm.log \
     && chown -R nginx:nginx /var/run \
     && touch /var/log/nginx/access.log \
     && touch /var/log/nginx/error.log \
-    && chown -R nginx:nginx /var/log/nginx/ \ 
+    && chown -R nginx:nginx /var/log/nginx/ \
     && touch /var/lib/nginx/logs/error.log \
     && chown nginx:nginx /var/lib/nginx/logs/error.log
 
@@ -86,7 +87,7 @@ sed -i -e "s/;listen.group = nobody/listen.group = nginx/g" ${fpm_conf} && \
 sed -i -e "s/listen = 127.0.0.1:9000/listen = \/var\/run\/php-fpm.sock/g" ${fpm_conf} &&\
 ln -s /etc/php5/php.ini /etc/php5/conf.d/php.ini && \
 find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
-    
+
 # Add Scripts
 ADD scripts/mntwatch /usr/bin/
 ADD scripts/start.sh /start.sh
