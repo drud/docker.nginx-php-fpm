@@ -89,7 +89,8 @@ ln -s /etc/php5/php.ini /etc/php5/conf.d/php.ini && \
 find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
 # Add Scripts
-ADD scripts/mntwatch /usr/bin/
+ADD bin/unison /usr/bin/
+ADD bin/unison-fsmonitor /usr/bin/
 ADD scripts/start.sh /start.sh
 ADD scripts/pull /usr/bin/pull
 ADD scripts/push /usr/bin/push
