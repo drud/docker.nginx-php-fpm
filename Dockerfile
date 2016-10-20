@@ -44,7 +44,8 @@ RUN apk add --no-cache bash \
     mkdir -p /var/log/supervisor
 
 ADD conf/php.ini /etc/php5/
-ADD conf/supervisord.conf /etc/supervisord.conf
+ADD conf/supervisord-local.conf /etc/supervisord-local.conf
+ADD conf/supervisord-remote.conf /etc/supervisord-remote.conf
 # Copy our nginx config
 RUN rm -Rf /etc/nginx/nginx.conf
 ADD conf/nginx.conf /etc/nginx/nginx.conf
