@@ -44,7 +44,8 @@ RUN apk add --no-cache bash \
     mkdir -p /var/log/supervisor
 
 ADD conf/php.ini /etc/php5/
-ADD conf/supervisord.conf /etc/supervisord.conf
+ADD conf/supervisord-local.conf /etc/supervisord-local.conf
+ADD conf/supervisord-remote.conf /etc/supervisord-remote.conf
 # Copy our nginx config
 RUN rm -Rf /etc/nginx/nginx.conf
 ADD conf/nginx.conf /etc/nginx/nginx.conf
@@ -89,7 +90,9 @@ ln -s /etc/php5/php.ini /etc/php5/conf.d/php.ini && \
 find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
 # Add Scripts
-ADD scripts/mntwatch /usr/bin/
+ADD bin/unison /usr/bin/
+ADD bin/unison-fsmonitor /usr/bin/
+ADD bin/mntwatch /usr/bin/
 ADD scripts/start.sh /start.sh
 ADD scripts/pull /usr/bin/pull
 ADD scripts/push /usr/bin/push
@@ -101,3 +104,4 @@ WORKDIR /var/www/html/docroot
 EXPOSE 443 80
 
 CMD ["/start.sh"]
+
