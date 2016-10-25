@@ -58,8 +58,10 @@ chown -Rf nginx.nginx /var/www/html
 
 # if a drud.yaml exists try to run its pre-start task set
 if [ -f /var/www/html/drud.yaml ]; then
-    echo "running pre-start hook"
-    dcfg run pre-start --config /var/www/html/drud.yaml
+    if grep -q "pre-start" /var/www/html/drud.yaml; then
+        echo "running pre-start hook"
+        dcfg run pre-start --config /var/www/html/drud.yaml
+    fi
 fi
 
 # Start supervisord and services
