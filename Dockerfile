@@ -1,8 +1,9 @@
 FROM drud/nginx-php-fpm
 
-ENV DRUSH_VERSION 7.3.0
+ENV DRUSH_VERSION 8.1.2
 ENV PATH="/root/.composer/vendor/bin:$PATH"
 
 
-# Install Drush using Composer.
-RUN composer global require drush/drush:"$DRUSH_VERSION" --prefer-dist
+# Install Drush
+RUN curl -fsSL -o /usr/local/bin/drush "https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.phar" && \
+    chmod +x /usr/local/bin/drush
