@@ -55,8 +55,12 @@ fi
 # Ensure code and files dir is owned by nginx user and nginx can write to files volume mount.
 cp -r /src/*  /var/www/html/
 chown -Rf nginx.nginx /var/www/html
-#chown -Rf nginx.nginx /files
-#chmod 755 /files
+
+# if a drud.yaml exists try to run its pre-start task set
+if [ -f /var/www/html/drud.yaml ]; then
+    echo "running pre-start hook"
+    dcfg run pre-start --config /var/www/html/drud.yaml
+fi
 
 # Start supervisord and services
 if [[ "$DEPLOY_NAME" == "local" ]] ; then
