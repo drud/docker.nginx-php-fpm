@@ -61,11 +61,12 @@ chown -Rf nginx.nginx /var/www/html
 # Start supervisord and services
 if [[ "$DEPLOY_NAME" == "local" ]] ; then
     echo "starting local services"
-    /usr/bin/supervisord -c /etc/supervisord-local.conf
+    cp /etc/supervisord-local.conf /etc/supervisord.conf
 else
     echo "starting remote services"
-    /usr/bin/supervisord -c /etc/supervisord-remote.conf
+    cp /etc/supervisord-remote.conf /etc/supervisord.conf
 fi
+/usr/bin/supervisord -c /etc/supervisord.conf
 
 echo 'Server started'
 tail -f /var/log/nginx/error.log
