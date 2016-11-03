@@ -34,9 +34,9 @@ fi
 
 # Display PHP error's or not
 if [[ "$ERRORS" != "1" ]] ; then
- echo php_flag[display_errors] = off >> /etc/php5/php-fpm.conf
+ echo php_flag[display_errors] = off >> /etc/php/7.0/fpm/php-fpm.conf
 else
- echo php_flag[display_errors] = on >> /etc/php5/php-fpm.conf
+ echo php_flag[display_errors] = on >> /etc/php/7.0/fpm/php-fpm.conf
 fi
 
 # Very dirty hack to replace variables in code with ENVIRONMENT values
