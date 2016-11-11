@@ -92,10 +92,12 @@ find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {}
 # Add Scripts
 ADD files /
 ADD scripts/start.sh /start.sh
+ADD scripts/ownit.sh /ownit.sh
 ADD scripts/pull /usr/bin/pull
 ADD scripts/push /usr/bin/push
 RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
+RUN chmod 755 /ownit.sh
 RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
 WORKDIR /var/www/html/docroot
