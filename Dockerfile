@@ -69,7 +69,7 @@ RUN apt-get install -y --force-yes \
     nginx
 
 # Install supervisor
-RUN apt-get install -y supervisor
+RUN apt-get install -y supervisor mysql-client
 
 # nginx site conf
 RUN mkdir -p /etc/nginx/sites-available/ && \
