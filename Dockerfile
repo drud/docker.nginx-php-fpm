@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM nginx:mainline-alpine
 
 MAINTAINER ngineered <support@ngineered.co.uk>
 
@@ -8,14 +8,12 @@ ENV fpm_conf /etc/php5/php-fpm.conf
 RUN apk add --no-cache bash \
     openssh-client \
     wget \
-    nginx \
     supervisor \
     curl \
     git \
     php5-fpm \
     php5-pdo \
     mysql-client \
-    rsync \
     libcap \
     php5-pdo_mysql \
     php5-mysql \
@@ -65,6 +63,7 @@ RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/defau
     && touch /var/log/nginx/access.log \
     && touch /var/log/nginx/error.log \
     && chown -R nginx:nginx /var/log/nginx/ \
+    && mkdir -p /var/lib/nginx/logs \
     && touch /var/lib/nginx/logs/error.log \
     && chown nginx:nginx /var/lib/nginx/logs/error.log
 
@@ -97,8 +96,8 @@ ADD scripts/push /usr/bin/push
 RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
 RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
+RUN mkdir -p /code && ln -s /code /var/www/html
 
-WORKDIR /var/www/html/docroot
 EXPOSE 443 80
 
 CMD ["/start.sh"]

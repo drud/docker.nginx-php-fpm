@@ -2,35 +2,6 @@
 
 # Disable Strict Host checking for non interactive git clones
 
-mkdir -p -m 0700 /root/.ssh
-echo -e "Host *\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
-
-if [ ! -z "$SSH_KEY" ]; then
- echo $SSH_KEY > /root/.ssh/id_rsa.base64
- base64 -d /root/.ssh/id_rsa.base64 > /root/.ssh/id_rsa
- chmod 600 /root/.ssh/id_rsa
-fi
-
-# Setup git variables
-if [ ! -z "$GIT_EMAIL" ]; then
- git config --global user.email "$GIT_EMAIL"
-fi
-if [ ! -z "$GIT_NAME" ]; then
- git config --global user.name "$GIT_NAME"
- git config --global push.default simple
-fi
-
-# Pull down code from git for our site!
-if [ ! -z "$GIT_REPO" ]; then
-  rm -Rf /var/www/html
-  mkdir /var/www/html
-  if [ ! -z "$GIT_BRANCH" ]; then
-    git clone -b $GIT_BRANCH $GIT_REPO /var/www/html/
-  else
-    git clone $GIT_REPO /var/www/html/
-  fi
-  chown -Rf nginx.nginx /var/www/html
-fi
 
 # Display PHP error's or not
 if [[ "$ERRORS" != "1" ]] ; then
@@ -52,9 +23,13 @@ if [[ "$TEMPLATE_NGINX_HTML" == "1" ]] ; then
   done
 fi
 
-# Ensure code and files dir is owned by nginx user and nginx can write to files volume mount.
-cp -r /src/*  /var/www/html/
-chown -Rf nginx.nginx /var/www/html
+if [[ -v GIT_SYNC_REPO ]]; then
+  echo "cloning repository"
+  export GIT_SYNC_ONETIME=true
+  /usr/bin/git-sync
+  rm -rf /var/www/html
+  ln -s /code /var/www/html
+fi
 
 # if a drud.yaml exists try to run its pre-start task set
 if [ -f /var/www/html/drud.yaml ]; then
