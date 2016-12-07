@@ -53,10 +53,10 @@ var flMaxSyncFailures = flag.Int("max-sync-failures", envInt("GIT_SYNC_MAX_SYNC_
 var flUsername = flag.String("username", envString("GIT_SYNC_USERNAME", ""), "username")
 var flPassword = flag.String("password", envString("GIT_SYNC_PASSWORD", ""), "password")
 
-var flChmod = flag.Int("change-permissions", envInt("GIT_SYNC_PERMISSIONS", 0), `If set it will change the permissions of the directory 
+var flChmod = flag.Int("change-permissions", envInt("GIT_SYNC_PERMISSIONS", 0), `If set it will change the permissions of the directory
 		that contains the git repository. Example: 744`)
 
-var flTemplate = flag.String("template", envString("DEPLOY_TEMPLATE", ""), `The template of this deployment. If 'drupal', will create settings.php file 
+var flTemplate = flag.String("template", envString("DEPLOY_TEMPLATE", ""), `The template of this deployment. If 'drupal', will create settings.php file
         if wordpress, will create a wp-config.php file.`)
 
 // wp specific values
@@ -212,7 +212,7 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 		filepath := ""
 		if *flTemplate == "drupal" {
 			log.Printf("Drupal site. Creating settings.php file.")
-			filepath = "/code/docroot/sites/default/settings.php"
+			filepath = *flDest + "/docroot/sites/default/settings.php"
 			drupalConfig := model.NewDrupalConfig()
 			err = config.WriteDrupalConfig(drupalConfig, filepath)
 			if err != nil {
@@ -220,7 +220,7 @@ func syncRepo(repo, dest, branch, rev string, depth int) error {
 			}
 		} else if *flTemplate == "wordpress" {
 			log.Printf("Wordpress site. Creating wp-confg.php file.")
-			filepath = "/code/docroot/wp-config.php"
+			filepath = *flDest + "/docroot/wp-config.php"
 			wpConfig := model.NewWordpressConfig()
 			wpConfig.AuthKey = *authKey
 			wpConfig.AuthSalt = *authSalt

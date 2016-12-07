@@ -41,60 +41,46 @@ RUN apk add --no-cache bash \
     mkdir -p /run/nginx && \
     mkdir -p /var/log/supervisor
 
-ADD conf/php.ini /etc/php5/
-ADD conf/supervisord-local.conf /etc/supervisord-local.conf
-ADD conf/supervisord-remote.conf /etc/supervisord-remote.conf
-# Copy our nginx config
-RUN rm -Rf /etc/nginx/nginx.conf
-ADD conf/nginx.conf /etc/nginx/nginx.conf
+# Add Scripts
+ADD files /
 
-# nginx site conf
-RUN mkdir -p /etc/nginx/sites-available/ && \
-mkdir -p /etc/nginx/sites-enabled/ && \
-mkdir -p /etc/nginx/ssl/ && \
-rm -Rf /var/www/*
-ADD conf/nginx-site.conf /etc/nginx/sites-available/default.conf
-
-RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf \
-    && touch /var/log/php-fpm.log \
-    && chown nginx:nginx /var/log/php-fpm.log \
-    && chown -R nginx:nginx /var/run \
-    && touch /var/log/nginx/access.log \
-    && touch /var/log/nginx/error.log \
-    && chown -R nginx:nginx /var/log/nginx/ \
-    && mkdir -p /var/lib/nginx/logs \
-    && touch /var/lib/nginx/logs/error.log \
-    && chown nginx:nginx /var/lib/nginx/logs/error.log
+RUN mkdir -p /etc/nginx/sites-enabled && \
+    ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
+    touch /var/log/php-fpm.log && \
+    chown nginx:nginx /var/log/php-fpm.log && \
+    chown -R nginx:nginx /var/run && \
+    touch /var/log/nginx/access.log && \
+    touch /var/log/nginx/error.log && \
+    chown -R nginx:nginx /var/log/nginx/ && \
+    mkdir -p /var/lib/nginx/logs && \
+    touch /var/lib/nginx/logs/error.log && \
+    chown nginx:nginx /var/lib/nginx/logs/error.log && \
+    chmod ugo+x /usr/local/bin/* && \
+    chmod ugo+x /start.sh
 
 # tweak php-fpm config
 RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" ${php_conf} && \
-sed -i -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 100M/g" ${php_conf} && \
-sed -i -e "s/post_max_size\s*=\s*8M/post_max_size = 100M/g" ${php_conf} && \
-sed -i -e "s/variables_order = \"GPCS\"/variables_order = \"EGPCS\"/g" ${php_conf} && \
-sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" ${fpm_conf} && \
-sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" ${fpm_conf} && \
-sed -i -e "s/pm.max_children = 4/pm.max_children = 4/g" ${fpm_conf} && \
-sed -i -e "s/pm.start_servers = 2/pm.start_servers = 3/g" ${fpm_conf} && \
-sed -i -e "s/pm.min_spare_servers = 1/pm.min_spare_servers = 2/g" ${fpm_conf} && \
-sed -i -e "s/pm.max_spare_servers = 3/pm.max_spare_servers = 4/g" ${fpm_conf} && \
-sed -i -e "s/pm.max_requests = 500/pm.max_requests = 200/g" ${fpm_conf} && \
-sed -i -e "s/user = nobody/user = nginx/g" ${fpm_conf} && \
-sed -i -e "s/group = nobody/group = nginx/g" ${fpm_conf} && \
-sed -i -e "s/;listen.mode = 0660/listen.mode = 0666/g" ${fpm_conf} && \
-sed -i -e "s/;listen.owner = nobody/listen.owner = nginx/g" ${fpm_conf} && \
-sed -i -e "s/;listen.group = nobody/listen.group = nginx/g" ${fpm_conf} && \
-sed -i -e "s/listen = 127.0.0.1:9000/listen = \/var\/run\/php-fpm.sock/g" ${fpm_conf} &&\
-ln -s /etc/php5/php.ini /etc/php5/conf.d/php.ini && \
-find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
+    sed -i -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 100M/g" ${php_conf} && \
+    sed -i -e "s/post_max_size\s*=\s*8M/post_max_size = 100M/g" ${php_conf} && \
+    sed -i -e "s/variables_order = \"GPCS\"/variables_order = \"EGPCS\"/g" ${php_conf} && \
+    sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" ${fpm_conf} && \
+    sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" ${fpm_conf} && \
+    sed -i -e "s/pm.max_children = 4/pm.max_children = 4/g" ${fpm_conf} && \
+    sed -i -e "s/pm.start_servers = 2/pm.start_servers = 3/g" ${fpm_conf} && \
+    sed -i -e "s/pm.min_spare_servers = 1/pm.min_spare_servers = 2/g" ${fpm_conf} && \
+    sed -i -e "s/pm.max_spare_servers = 3/pm.max_spare_servers = 4/g" ${fpm_conf} && \
+    sed -i -e "s/pm.max_requests = 500/pm.max_requests = 200/g" ${fpm_conf} && \
+    sed -i -e "s/user = nobody/user = nginx/g" ${fpm_conf} && \
+    sed -i -e "s/group = nobody/group = nginx/g" ${fpm_conf} && \
+    sed -i -e "s/;listen.mode = 0660/listen.mode = 0666/g" ${fpm_conf} && \
+    sed -i -e "s/;listen.owner = nobody/listen.owner = nginx/g" ${fpm_conf} && \
+    sed -i -e "s/;listen.group = nobody/listen.group = nginx/g" ${fpm_conf} && \
+    sed -i -e "s/listen = 127.0.0.1:9000/listen = \/var\/run\/php-fpm.sock/g" ${fpm_conf} &&\
+    ln -s /etc/php5/php.ini /etc/php5/conf.d/php.ini && \
+    find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
-# Add Scripts
-ADD files /
-ADD scripts/start.sh /start.sh
-ADD scripts/pull /usr/bin/pull
-ADD scripts/push /usr/bin/push
-RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
-RUN chmod 755 /start.sh
-RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
+RUN chmod 755 /start.sh && \
+    setcap cap_net_bind_service=ep /usr/sbin/nginx
 
 EXPOSE 443 80
 
