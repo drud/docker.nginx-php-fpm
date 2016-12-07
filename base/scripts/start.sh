@@ -25,10 +25,9 @@ fi
 
 if [[ -v GIT_SYNC_REPO ]]; then
   echo "cloning repository"
-  export GIT_SYNC_ONETIME=true
+  export GIT_SYNC_ONE_TIME="true"
   /usr/bin/git-sync
-  rm -rf /var/www/html
-  ln -s /code /var/www/html
+  chown -R nginx:nginx /var/www/html
 fi
 
 # if a drud.yaml exists try to run its pre-start task set
