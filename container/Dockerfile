@@ -4,6 +4,8 @@ MAINTAINER ngineered <support@ngineered.co.uk>
 
 ENV php_conf /etc/php5/php.ini
 ENV fpm_conf /etc/php5/php-fpm.conf
+ENV DRUSH_VERSION 8.1.2
+ENV PATH="/root/.composer/vendor/bin:$PATH"
 
 RUN apk add --no-cache bash \
     openssh-client \
@@ -39,7 +41,9 @@ RUN apk add --no-cache bash \
     mkdir -p /etc/nginx && \
     mkdir -p /var/www/app && \
     mkdir -p /run/nginx && \
-    mkdir -p /var/log/supervisor
+    mkdir -p /var/log/supervisor && \
+    curl -fsSL -o /usr/local/bin/drush "https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.phar" && \
+    chmod +x /usr/local/bin/drush
 
 # Add Scripts
 ADD files /
