@@ -2,19 +2,25 @@
 all: push
 
 TAG = $(shell git rev-parse --abbrev-ref HEAD | tr -d '\n')
-prefix = drud/nginx-php-fpm
+PREFIX = drud/nginx-php-fpm
+LOCALPREFIX = drud/nginx-php-fpm-local
 
 binary:
-	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-w' -o container/files/usr/bin//git-sync ./git-sync/main.go
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-w' -o base/files/usr/bin/git-sync ./git-sync/main.go
 
 dev: binary
-	docker build -t $(prefix):$(TAG) container
+	docker build -t $(PREFIX):$(TAG) base
+	docker build -t $(LOCALPREFIX):$(TAG) local
+
 
 latest: dev
-	docker tag $(prefix):$(TAG) $(prefix):latest
+	docker tag $(PREFIX):$(TAG) $(PREFIX):latest
+	docker tag $(PREFIX):$(TAG) $(PREFIX):latest
 
 canary: dev
-	docker push $(prefix):$(TAG)
+	docker push $(PREFIX):$(TAG)
+	docker push $(LOCALPREFIX):$(TAG)
 
 all: latest canary
-	docker push $(prefix):latest
+	docker push $(PREFIX):latest
+	docker push $(LOCALPREFIX):latest
