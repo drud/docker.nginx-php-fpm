@@ -4,6 +4,7 @@ MAINTAINER ngineered <support@ngineered.co.uk>
 
 ENV php_conf /etc/php5/php.ini
 ENV fpm_conf /etc/php5/php-fpm.conf
+ENV MAILHOG_VERSION 0.2.1
 
 RUN apk add --no-cache bash \
     openssh-client \
@@ -12,6 +13,7 @@ RUN apk add --no-cache bash \
     supervisor \
     curl \
     git \
+    alpine-sdk \
     php5-fpm \
     php5-pdo \
     mysql-client \
@@ -42,6 +44,13 @@ RUN apk add --no-cache bash \
     mkdir -p /var/www/app && \
     mkdir -p /run/nginx && \
     mkdir -p /var/log/supervisor
+
+RUN git clone http://github.com/bmc/daemonize.git \
+    && cd daemonize \
+    && sh configure \
+    && make \
+    && make install \
+    && rm -rf /daemonize
 
 ADD conf/php.ini /etc/php5/
 ADD conf/supervisord-local.conf /etc/supervisord-local.conf
@@ -98,8 +107,12 @@ RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
 RUN chmod 755 /start.sh
 RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
+ADD https://github.com/mailhog/MailHog/releases/download/v${MAILHOG_VERSION}/MailHog_linux_amd64 /usr/bin/mailhog
+
+RUN chmod ugo+x /usr/bin/mailhog
+
 WORKDIR /var/www/html/docroot
-EXPOSE 443 80
+EXPOSE 443 80 8025
 
 CMD ["/start.sh"]
 
