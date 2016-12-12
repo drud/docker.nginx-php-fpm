@@ -12,8 +12,8 @@ if [ "$(whoami)" = "root" ]; then
 
   # Run as wordpress user instead
   # This helps that we don't install things as root
-  #su -s /bin/bash wordpress -c "/usr/local/bin/wp-cli $args --path=$WP_CORE"
-  /usr/local/bin/wp-cli "$@" --path=$WP_CORE --allow-root
+  #su -s /bin/bash wordpress -c "/usr/bin/wp-cli $args --path=$WP_CORE"
+  /usr/bin/wp-cli "$@" --path=$WP_CORE --allow-root
 else
-  /usr/local/bin/wp-cli "$@" --path=$WP_CORE
+  /usr/bin/wp-cli "$@" --path=$WP_CORE
 fi
