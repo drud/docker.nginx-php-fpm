@@ -5,6 +5,7 @@ MAINTAINER ngineered <support@ngineered.co.uk>
 ENV php_conf /etc/php5/php.ini
 ENV fpm_conf /etc/php5/php-fpm.conf
 ENV DRUSH_VERSION 8.1.2
+ENV MAILHOG_VERSION 0.2.1
 ENV PATH="/root/.composer/vendor/bin:$PATH"
 
 RUN apk add --no-cache bash \
@@ -13,6 +14,7 @@ RUN apk add --no-cache bash \
     supervisor \
     curl \
     git \
+    alpine-sdk \
     php5-fpm \
     php5-pdo \
     mysql-client \
@@ -44,6 +46,13 @@ RUN apk add --no-cache bash \
     mkdir -p /var/log/supervisor && \
     curl -fsSL -o /usr/local/bin/drush "https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.phar" && \
     chmod +x /usr/local/bin/drush
+
+RUN git clone http://github.com/bmc/daemonize.git \
+    && cd daemonize \
+    && sh configure \
+    && make \
+    && make install \
+    && rm -rf /daemonize
 
 # Add Scripts
 ADD files /
@@ -86,7 +95,11 @@ RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" ${php_conf} && \
 RUN chmod 755 /start.sh && \
     setcap cap_net_bind_service=ep /usr/sbin/nginx
 
-EXPOSE 443 80
+ADD https://github.com/mailhog/MailHog/releases/download/v${MAILHOG_VERSION}/MailHog_linux_amd64 /usr/bin/mailhog
+
+RUN chmod ugo+x /usr/bin/mailhog
+
+EXPOSE 443 80 8025
 
 CMD ["/start.sh"]
 
