@@ -1,6 +1,4 @@
 
-all: push
-
 TAG = $(shell git rev-parse --abbrev-ref HEAD | tr -d '\n')
 PREFIX = drud/nginx-php-fpm
 LOCALPREFIX = drud/nginx-php-fpm-local
@@ -15,7 +13,7 @@ dev: binary
 
 latest: dev
 	docker tag $(PREFIX):$(TAG) $(PREFIX):latest
-	docker tag $(PREFIX):$(TAG) $(PREFIX):latest
+	docker tag $(LOCALPREFIX):$(TAG) $(LOCALPREFIX):latest
 
 canary: dev
 	docker push $(PREFIX):$(TAG)
