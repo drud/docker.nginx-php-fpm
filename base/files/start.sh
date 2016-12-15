@@ -27,6 +27,12 @@ if [[ -v GIT_SYNC_REPO ]]; then
   echo "cloning repository"
   export GIT_SYNC_ONE_TIME="true"
   /usr/bin/git-sync
+  status=$?
+  if [[ $status != 0 ]]; then
+    echo "Could not perform git-sync. Exiting."
+    exit $status
+  fi
+
   chown -R nginx:nginx /var/www/html
 fi
 
