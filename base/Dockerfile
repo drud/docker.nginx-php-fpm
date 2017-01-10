@@ -8,7 +8,7 @@ ENV DRUSH_VERSION 8.1.2
 ENV MAILHOG_VERSION 0.2.1
 ENV PATH="/root/.composer/vendor/bin:$PATH"
 
-RUN apk add --no-cache bash \
+RUN apk update && apk add --no-cache bash less \
     openssh-client \
     wget \
     supervisor \
