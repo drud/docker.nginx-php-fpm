@@ -1,0 +1,31 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "CN+q0Ml+3vG4edFIC8CLZu6Jfsg=",
+			"path": "github.com/Masterminds/sprig",
+			"revision": "a117ed702927cdea38b68f1b9639d1d731cebfda",
+			"revisionTime": "2016-06-23T15:24:37Z"
+		},
+		{
+			"checksumSHA1": "ryixco0k3QlLFtp7a1x2jznl7OY=",
+			"path": "github.com/aokoli/goutils",
+			"revision": "9c37978a95bd5c709a15883b6242714ea6709e64",
+			"revisionTime": "2014-05-02T00:11:28Z"
+		},
+		{
+			"checksumSHA1": "AoIS4W3mWNKLJ1mcLDKSYvwtmfU=",
+			"path": "github.com/drud/docker.git-sync/git-sync/config",
+			"revision": "4f7bc26a3290971a0b2f37f3b6f709c7367393e1",
+			"revisionTime": "2016-09-13T00:40:57Z"
+		},
+		{
+			"checksumSHA1": "4+4wxI68e+yx/Ax4CYEcx/U4zp0=",
+			"path": "github.com/drud/docker.git-sync/git-sync/model",
+			"revision": "4f7bc26a3290971a0b2f37f3b6f709c7367393e1",
+			"revisionTime": "2016-09-13T00:40:57Z"
+		}
+	],
+	"rootPath": "github.com/drud/docker.nginx-php-fpm/git-sync"
+}
