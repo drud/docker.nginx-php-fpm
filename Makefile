@@ -3,7 +3,7 @@
 # TAG should be overridden with the make command, like make TAG=0.0.2 taggedpush
 TAG = $(shell git rev-parse --abbrev-ref HEAD | tr -d '\n')
 
-PREFIX = drud/nginx-php-fpm
+PREFIX = drud/nginx-php-fpm7
 
 binary:
 	CGO_ENABLED=0 GOOS=linux go build -installsuffix cgo -ldflags '-w' -o files/usr/bin/git-sync ./git-sync/main.go
