@@ -6,12 +6,12 @@ ENV WP_CLI_VERSION 1.0.0
 ENV PATH="/root/.composer/vendor/bin:$PATH"
 
 RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62 && \
-	echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/apt/sources.list \
-	&& apt-get update \
-	&& apt-get install --no-install-recommends --no-install-suggests -y \
-    nginx=${NGINX_VERSION} \
-    libcap2-bin \
-    supervisor && \
+	echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/apt/sources.list && \
+	apt-get update && \
+	apt-get install --no-install-recommends --no-install-suggests -y \
+        nginx=${NGINX_VERSION} \
+        libcap2-bin \
+        supervisor && \
     apt-get clean -y && \
 	rm -rf /var/lib/apt/lists/* && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
