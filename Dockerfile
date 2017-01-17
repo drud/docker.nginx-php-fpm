@@ -1,4 +1,4 @@
-FROM drud/php7:dev
+FROM drud/php7:0.1.0
 
 ENV NGINX_VERSION 1.11.8-1~jessie
 ENV DRUSH_VERSION 8.1.3
