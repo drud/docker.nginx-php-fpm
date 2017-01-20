@@ -1,7 +1,7 @@
 FROM drud/php7:0.1.0
 
 ENV NGINX_VERSION 1.11.8-1~jessie
-ENV DRUSH_VERSION 8.1.3
+ENV DRUSH_VERSION 8.1.8
 ENV WP_CLI_VERSION 1.0.0
 ENV PATH="/root/.composer/vendor/bin:$PATH"
 
@@ -20,7 +20,9 @@ ADD "https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.p
 ADD "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar" /usr/bin/wp-cli
 ADD files /
 
-RUN mkdir -p /etc/nginx/sites-enabled && \
+RUN rm /etc/php/7.0/cli/php.ini && \
+    ln -s /etc/php/7.0/fpm/php.ini /etc/php/7.0/cli/php.ini && \
+    mkdir -p /etc/nginx/sites-enabled && \
     ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
     touch /var/log/php7.0-fpm.log && \
     chown nginx:nginx /var/log/php7.0-fpm.log && \
