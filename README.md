@@ -1,9 +1,24 @@
-## Introduction
-This is a Dockerfile to build a container image for nginx and php-fpm, with the ability to pull website code from git. The container also has the ability to update templated files with vaiables passed to docker in order to update your settings.
+# Docker NGINX PHP FPM
 
-Forked from https://github.com/ngineered/nginx-php-fpm. The [README there](https://github.com/ngineered/nginx-php-fpm/blob/master/README.md) is useful.
+## Introduction
+This is a Dockerfile to build a container image for NGINX and PHP in FPM with production configurations. 
+
+## Features
+
+* The container leverages [git-sync](https://github.com/drud/docker.git-sync) to facilitate cloning a website repository into the container.
+* Provides [Composer](https://getcomposer.org/), [Drush](http://www.drush.org), and [WP-CLI](http://www.wp-cli.org) to help facilitate deploying PHP, Drupal, or Wordpress applications.
+
+## Versions
+
+This repo currently provides images to use either PHP 7 or PHP 5.6. 
+
+The PHP 5.6 version is alpine-based and originally forked from [ngineered/nginx-php-fpm](https://github.com/ngineered/nginx-php-fpm)
+
+The PHP 7 version is based on our [PHP7 container](https://github.com/drud/docker.php7) which is based on [minideb](https://github.com/bitnami/minideb)
 
 ## Building and pushing to dockerhub
+
+Makefiles are provided for both versions to help build containers.
 
 To push a new version to hub.docker.com 
 ```
@@ -14,8 +29,13 @@ If you omit setting the TAG on the build, it will try to use the branch you're o
 
 ## Running
 To simply run the container:
+
+PHP5.6 version:
 ```
 sudo docker run -d drud/nginx-php-fpm
 ```
 
-You can then browse to ```http://<DOCKER_HOST>:8080``` to view the default install files. To find your ```DOCKER_HOST``` use the ```docker inspect``` to get the IP address.
+PHP7 version:
+```
+sudo docker run -d drud/nginx-php-fpm7
+```
