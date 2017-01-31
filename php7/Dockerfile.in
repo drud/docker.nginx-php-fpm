@@ -37,9 +37,10 @@ RUN rm /etc/php/7.0/cli/php.ini && \
     mkdir -p /var/lib/nginx/logs && \
     touch /var/lib/nginx/logs/error.log && \
     chown nginx:nginx /var/lib/nginx/logs/error.log && \
-    setcap cap_net_bind_service=ep /usr/sbin/nginx && \
     chmod ugo+x /usr/bin/* && \
     chmod ugo+x /start.sh
+
+RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
 EXPOSE 80 443
 
