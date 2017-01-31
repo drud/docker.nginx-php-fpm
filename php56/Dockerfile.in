@@ -97,7 +97,8 @@ RUN sed -i -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" ${php_conf} && \
     find /etc/php5/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
 RUN chmod 755 /start.sh
-RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
+# Setcap fails when building on linux
+# RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
 ADD https://github.com/mailhog/MailHog/releases/download/v${MAILHOG_VERSION}/MailHog_linux_amd64 /usr/bin/mailhog
 

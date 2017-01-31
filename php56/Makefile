@@ -15,7 +15,7 @@ UPSTREAM_REPO ?= nginx:mainline-alpine
 #SRC_DIRS := filexs drudapi secrets utils
 
 # Optional to docker build
-DOCKER_ARGS = --build-arg DRUSH_VERSION=8.1.2 --build-arg MAILHOG_VERSION=0.2.1 --security-opt seccomp:unconfined
+DOCKER_ARGS = --build-arg DRUSH_VERSION=8.1.2 --build-arg MAILHOG_VERSION=0.2.1
 
 # VERSION can be set by
   # Default: git tag

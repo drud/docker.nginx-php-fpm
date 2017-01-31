@@ -40,7 +40,8 @@ RUN rm /etc/php/7.0/cli/php.ini && \
     chmod ugo+x /usr/bin/* && \
     chmod ugo+x /start.sh
 
-RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
+# Setcap fails when building on linux
+# RUN setcap cap_net_bind_service=ep /usr/sbin/nginx
 
 EXPOSE 80 443
 
