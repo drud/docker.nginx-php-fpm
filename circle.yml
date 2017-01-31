@@ -11,6 +11,9 @@ test:
         # docker login is required because the images derive from private image
         - echo "$DOCKER_EMAIL" | docker login -u $DOCKER_USER -p $DOCKER_PASS
         - make container
-        - docker run -it $(cat php7/.docker_image)  php --version | grep "^PHP 7"
-        - docker run -it $(cat php56/.docker_image)  php --version | grep "^PHP 5\.6"
-
+        - docker run -p 80:80 -d --name php7 -d $(cat php7/.docker_image)
+        - curl localhost/test/test.php | grep "copy of the PHP license"
+        - docker stop php7
+        - docker run -p 80:80 -d --name php56 -d $(cat php56/.docker_image)
+        - curl localhost/test/test.php | grep "copy of the PHP license"
+        - docker stop php56
