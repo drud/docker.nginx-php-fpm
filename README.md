@@ -18,14 +18,16 @@ The PHP 7 version is based on our [PHP7 container](https://github.com/drud/docke
 
 ## Building and pushing to dockerhub
 
-Makefiles are provided for both versions to help build containers.
+Standard build targets are provided both at the top-level Makefile and the individual Makefiles in the php56 and php7 directories.
 
-To push a new version to hub.docker.com 
 ```
-make TAG=x.x.x taggedpush"
+make container
+make push
+make VERSION=0.1.0 container
+make VERSION=0.1.0 push
+make version
+make clean
 ```
-
-If you omit setting the TAG on the build, it will try to use the branch you're on as the tag.
 
 ## Running
 To simply run the container:
