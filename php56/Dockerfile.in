@@ -60,6 +60,7 @@ RUN git clone http://github.com/bmc/daemonize.git \
 
 # Add Scripts
 ADD files /
+ADD .tmp/bin/linux/git-sync /usr/bin/git-sync
 
 RUN mkdir -p /etc/nginx/sites-enabled && \
     ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \

@@ -3,7 +3,7 @@
 ##### These variables need to be adjusted in most repositories #####
 
 # This repo's root import path (under GOPATH).
-#PKG := github.com/drud/docker.site-deploy
+PKG := github.com/drud/docker.nginx-php-fpm
 
 # Docker repo for a push
 # DOCKER_REPO ?= drud/docker_repo_name
@@ -12,7 +12,7 @@
 # UPSTREAM_REPO ?= full/upstream-docker-repo
 
 # Top-level directories to build
-#SRC_DIRS := php56 php7
+SRC_DIRS := git-sync
 
 # Optional to docker build
 # DOCKER_ARGS =
@@ -43,12 +43,21 @@ include build-tools/makefile_components/base_build_go.mak
 include build-tools/makefile_components/base_test_go.mak
 #include build-tools/makefile_components/base_test_python.mak
 
+.PHONY: copyfiles container push clean
 
-container:
+container: copyfiles
 	$(MAKE) -C ./php56 $(MAKEFLAGS) $(MAKECMDGOALS)
 	$(MAKE) -C ./php7 $(MAKEFLAGS) $(MAKECMDGOALS)
 
+# Copy the binaries built here into the subdirectories where they can be picked up by Dockerfile
+copyfiles: linux
+	for dir in php56 php7; do if ! [ -d $$dir/.tmp ] ; then mkdir $$dir/.tmp; fi; cp -r bin $$dir/.tmp/; done
+
 push: container
+	$(MAKE) -C ./php56 $(MAKEFLAGS) $(MAKECMDGOALS)
+	$(MAKE) -C ./php7 $(MAKEFLAGS) $(MAKECMDGOALS)
+
+clean: container-clean bin-clean
 	$(MAKE) -C ./php56 $(MAKEFLAGS) $(MAKECMDGOALS)
 	$(MAKE) -C ./php7 $(MAKEFLAGS) $(MAKECMDGOALS)
 

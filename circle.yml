@@ -11,6 +11,8 @@ test:
         # docker login is required because the images derive from private image
         - echo "$DOCKER_EMAIL" | docker login -u $DOCKER_USER -p $DOCKER_PASS
         - make container
+        - php56/files/usr/bin/git-sync -repo https://github.com/github/Spoon-Knife.git -dest /tmp/Spoon-Knife_56 -one-time
+        - php7/files/usr/bin/git-sync -repo https://github.com/github/Spoon-Knife.git -dest /tmp/Spoon-Knife_7 -one-time
         - docker run -p 80:80 -d --name php7 -d $(cat php7/.docker_image)
         - curl localhost/test/test.php | grep "copy of the PHP license"
         - docker stop php7
