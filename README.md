@@ -21,6 +21,9 @@ The PHP 7 version is based on our [PHP7 container](https://github.com/drud/docke
 Standard build targets are provided both at the top-level Makefile and the individual Makefiles in the php56 and php7 directories.
 
 ```
+make linux
+make darwin
+make test
 make container
 make push
 make VERSION=0.1.0 container
