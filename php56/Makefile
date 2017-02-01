@@ -1,19 +1,41 @@
+# Makefile for a standard golang repo with associated container
 
-# Normal usage to push a new version to hub.docker.com would be "make TAG=x.x.x taggedpush"
-# TAG should be overridden with the make command, like make TAG=0.0.2 taggedpush
-TAG = $(shell git rev-parse --abbrev-ref HEAD | tr -d '\n')
+##### These variables need to be adjusted in most repositories #####
 
-PREFIX = drud/nginx-php-fpm
+# This repo's root import path (under GOPATH).
+#PKG := github.com/drud/docker.nginx-php-fpm
 
-binary:
-	CGO_ENABLED=0 GOOS=linux go build -installsuffix cgo -ldflags '-w' -o files/usr/bin/git-sync ../git-sync/main.go
+# Docker repo for a push
+DOCKER_REPO ?= drud/nginx-php-fpm
 
-dev: binary
-	docker build -t $(PREFIX):$(TAG) .
+# Upstream repo used in the Dockerfile
+UPSTREAM_REPO ?= nginx:mainline-alpine
 
-latest: dev
-	docker tag $(PREFIX):$(TAG) $(PREFIX):latest .
+# Top-level directories to build
+#SRC_DIRS := filexs drudapi secrets utils
 
-taggedpush: dev
-	docker push $(PREFIX):$(TAG)
+# Optional to docker build
+DOCKER_ARGS = --build-arg DRUSH_VERSION=8.1.2 --build-arg MAILHOG_VERSION=0.2.1
 
+# VERSION can be set by
+  # Default: git tag
+  # make command line: make VERSION=0.9.0
+# It can also be explicitly set in the Makefile as commented out below.
+
+# This version-strategy uses git tags to set the version string
+# VERSION can be overridden on make commandline: make VERSION=0.9.1 push
+VERSION := $(shell git describe --tags --always --dirty)
+#
+# This version-strategy uses a manual value to set the version string
+#VERSION := 1.2.3
+
+# Each section of the Makefile is included from standard components below.
+# If you need to override one, import its contents below and comment out the
+# include. That way the base components can easily be updated as our general needs
+# change.
+#include ../build-tools/makefile_components/base_build_go.mak
+include ../build-tools/makefile_components/base_build_python-docker.mak
+include ../build-tools/makefile_components/base_container.mak
+include ../build-tools/makefile_components/base_push.mak
+#include build-tools/makefile_components/base_test_go.mak
+#include build-tools/makefile_components/base_test_python.mak
