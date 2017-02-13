@@ -43,6 +43,8 @@ if [ -f /var/www/html/drud.yaml ]; then
     fi
 fi
 
+ln -s ${NGINX_SITE_CONF} /etc/nginx/sites-enabled/default.conf
+
 /usr/bin/supervisord -c /etc/supervisord.conf
 
 echo 'Server started'
