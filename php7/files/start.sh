@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Allow the docker volumes to fully mount
+sleep 5s
+
 # Display PHP error's or not
 if [[ "$ERRORS" != "1" ]] ; then
  echo php_flag[display_errors] = off >> /etc/php/7.0/fpm/php-fpm.conf
