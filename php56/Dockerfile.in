@@ -11,6 +11,7 @@ ENV MAILHOG_VERSION=$MAILHOG_VERSION
 ENV php_conf /etc/php5/php.ini
 ENV fpm_conf /etc/php5/php-fpm.conf
 ENV PATH="/root/.composer/vendor/bin:$PATH"
+ENV DCFG_VERSION 0.2
 
 RUN apk update && apk add --no-cache bash less \
     openssh-client \
@@ -61,6 +62,7 @@ RUN git clone http://github.com/bmc/daemonize.git \
 # Add Scripts
 ADD files /
 ADD .tmp/bin/linux/git-sync /usr/bin/git-sync
+ADD "https://github.com/drud/dcfg/releases/download/$DCFG_VERSION/dcfg-linux" /usr/bin/dcfg
 
 RUN mkdir -p /etc/nginx/sites-enabled && \
     ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
