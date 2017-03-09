@@ -9,7 +9,8 @@
 DOCKER_REPO ?= drud/nginx-php-fpm7
 
 # Upstream repo used in the Dockerfile
-UPSTREAM_REPO ?= drud/php7:0.1.0
+UPSTREAM_PHP_REPO_TAG ?= 0.1.0
+UPSTREAM_REPO ?= drud/php7:$(UPSTREAM_PHP_REPO_TAG)
 
 # Top-level directories to build
 #SRC_DIRS := filexs drudapi secrets utils
