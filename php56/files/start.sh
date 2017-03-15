@@ -36,7 +36,7 @@ fi
 
 # Files mounted to /var/www/html may be owned by a random (host) user, often
 # uid 1000, but make sure that nginx can access them in the least intrusive way.
-chgrp -R nginx /var/www/html && chmod g+rw /var/www/nginx
+chgrp -R nginx /var/www/html
 
 # if a drud.yaml exists try to run its pre-start task set
 if [ -f /var/www/html/drud.yaml ]; then
