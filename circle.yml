@@ -8,8 +8,6 @@ dependencies:
 
 test:
     override:
-        # docker login is required because the images derive from private image
-        - echo "$DOCKER_EMAIL" | docker login -u $DOCKER_USER -p $DOCKER_PASS
         - make test
         - make container
         # Complexity of parsing the container name out of .docker_image is caused by drift of format -
