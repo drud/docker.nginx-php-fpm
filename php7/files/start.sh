@@ -33,15 +33,7 @@ fi
 
 # Files mounted to /var/www/html may be owned by a random (host) user, often
 # uid 1000, but make sure that nginx can access them in the least intrusive way.
-chgrp -R nginx /var/www/html && chmod g+rw /var/www/nginx
-
-# if a drud.yaml exists try to run its pre-start task set
-if [ -f /var/www/html/drud.yaml ]; then
-    if grep -q "pre-start" /var/www/html/drud.yaml; then
-        echo "running pre-start hook"
-        dcfg run pre-start --config /var/www/html/drud.yaml
-    fi
-fi
+chgrp -R nginx /var/www/html
 
 /usr/bin/supervisord -c /etc/supervisord.conf
 
