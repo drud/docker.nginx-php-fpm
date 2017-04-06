@@ -9,14 +9,3 @@ dependencies:
 test:
     override:
         - make test
-        - make container
-        # Complexity of parsing the container name out of .docker_image is caused by drift of format -
-        # also removes some \n\n nonsense which got introduced upstream in build-tools.
-        - cd php7 && docker run -p 80:80 -d --name php7 -d $(sed 's/^.*drud/drud/' < .docker_image | sed 's/ .*$//')
-        - curl --fail localhost/healthcheck
-        - curl localhost/test/test.php | grep "copy of the PHP license"
-        - docker stop php7
-        - cd php56 && docker run -p 80:80 -d --name php56 -d $(sed 's/^.*drud/drud/' < .docker_image | sed 's/ .*$//')
-        - curl --fail localhost/healthcheck
-        - curl localhost/test/test.php | grep "copy of the PHP license"
-        - docker stop php56

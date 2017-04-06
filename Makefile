@@ -49,6 +49,10 @@ container: copyfiles
 	$(MAKE) -C ./php56 $(MAKEFLAGS) $(MAKECMDGOALS)
 	$(MAKE) -C ./php7 $(MAKEFLAGS) $(MAKECMDGOALS)
 
+test: container
+	$(MAKE) -C ./php56 $(MAKEFLAGS) $(MAKECMDGOALS)
+	$(MAKE) -C ./php7 $(MAKEFLAGS) $(MAKECMDGOALS)
+
 # Copy the binaries built here into the subdirectories where they can be picked up by Dockerfile
 copyfiles: linux
 	for dir in php56 php7; do if ! [ -d $$dir/.tmp ] ; then mkdir $$dir/.tmp; fi; cp -r bin $$dir/.tmp/; done
