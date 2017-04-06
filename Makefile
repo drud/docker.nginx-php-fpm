@@ -44,12 +44,12 @@ include build-tools/makefile_components/base_push.mak
 test: containertest gitsynctest
 
 containertest: build gitsynctest container
-	@docker stop php7 || true
-	@docker rm php7 || true
-	docker run -p 80:80 -d --name php7 -d $$(awk '{print $$1}' .docker_image)
-	sleep 2 && curl --fail localhost/healthcheck
-	curl -s localhost/test/test.php | grep "copy of the PHP license"
-	docker stop php7
+	@docker stop php7 2>/dev/null || true
+	@docker rm php7 2>/dev/null || true
+	docker run -p 1080:80 -d --name php7 -d $$(awk '{print $$1}' .docker_image)
+	sleep 2 && curl --fail localhost:1080/healthcheck
+	curl -s localhost:1080/test/test.php | grep "copy of the PHP license"
+	@docker stop php7
 
 gitsynctest: build
 	@mkdir -p bin/linux
