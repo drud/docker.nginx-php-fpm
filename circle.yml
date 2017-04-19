@@ -1,11 +1,14 @@
-machine:
-    services:
-        - docker
+version: 2
+executorType: machine
+stages:
+  build:
+    workDir: ~/docker.nginx-php-fpm
+    steps:
+      - checkout
 
-dependencies:
-    pre:
-        - make linux
+      - run: make container
 
-test:
-    override:
-        - make test
+      - run:
+          shell: /bin/bash
+          command: make test
+          name: make test
