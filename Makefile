@@ -43,10 +43,13 @@ include build-tools/makefile_components/base_push.mak
 
 test: containertest gitsynctest
 
+# The exec method used here is a workaround for incorrect 129 exit code; pending fix: https://github.com/moby/moby/issues/19699
 containertest: build gitsynctest container
 	@docker stop nginx-php-fpm-test 2>/dev/null || true
 	@docker rm nginx-php-fpm-test 2>/dev/null || true
 	docker run --detach -p 1080:80 --name nginx-php-fpm-test $$(awk '{print $$1}' .docker_image)
+	docker exec -it nginx-php-fpm-test bash -ic "drush --version; (exit \$$?)"
+	docker exec -it nginx-php-fpm-test bash -ic "wp --version; (exit \$$?)"
 	sleep 4
 	curl --fail localhost:1080/healthcheck
 	curl --fail localhost:1080/test/phptest.php
