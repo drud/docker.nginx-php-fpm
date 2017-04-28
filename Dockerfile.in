@@ -45,4 +45,6 @@ RUN rm /etc/php/7.0/cli/php.ini && \
 
 EXPOSE 80 443
 
+HEALTHCHECK CMD curl --fail http://localhost/healthcheck/ || exit 1
+
 CMD ["/start.sh"]
