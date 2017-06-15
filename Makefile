@@ -16,7 +16,7 @@ UPSTREAM_REPO ?= drud/php7:$(UPSTREAM_PHP_REPO_TAG)
 SRC_DIRS := git-sync
 
 # Optional to docker build
-DOCKER_ARGS = --build-arg DRUSH_VERSION=8.1.8 --build-arg NGINX_VERSION=1.11.8-1~jessie --build-arg WP_CLI_VERSION=1.0.0
+DOCKER_ARGS = --build-arg DRUSH_VERSION=8.1.12 --build-arg NGINX_VERSION=1.11.8-1~jessie --build-arg WP_CLI_VERSION=1.2.1
 
 # VERSION can be set by
   # Default: git tag
