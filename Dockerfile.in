@@ -32,6 +32,7 @@ ADD files /
 
 RUN rm /etc/php/7.0/cli/php.ini && \
     ln -s /etc/php/7.0/fpm/php.ini /etc/php/7.0/cli/php.ini && \
+    mkdir -p /etc/nginx/sites-available && \
     mkdir -p /etc/nginx/sites-enabled && \
     ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/site.conf && \
     touch /var/log/php7.0-fpm.log && \
