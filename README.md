@@ -5,7 +5,6 @@ This is a Dockerfile to build a container image for NGINX and PHP in FPM with pr
 
 ## Features
 
-* The container leverages [git-sync](https://github.com/drud/docker.git-sync) to facilitate cloning a website repository into the container.
 * Provides [Composer](https://getcomposer.org/), [Drush](http://www.drush.org), and [WP-CLI](http://www.wp-cli.org) to help facilitate deploying PHP, Drupal, or Wordpress applications.
 
 ## Versions
@@ -13,8 +12,6 @@ This is a Dockerfile to build a container image for NGINX and PHP in FPM with pr
 This project currently provides images to use PHP 7.0.x. It uses our [PHP7 container](https://github.com/drud/docker.php7) as upstream, which is based on [minideb](https://github.com/bitnami/minideb)
 
 ## Building and pushing to dockerhub
-
-Standard build targets are provided both at the top-level Makefile and the individual Makefiles in the php56 and php7 directories.
 
 ```
 make linux

@@ -9,13 +9,17 @@ ENV WP_CLI_VERSION=$WP_CLI_VERSION
 
 ENV PATH="/root/.composer/vendor/bin:$PATH"
 
+ENV NGINX_DOCROOT /var/www/html
+# Defines vars in colon-separated notation to be subsituted with values for NGINX_SITE_TEMPLATE on start
+ENV NGINX_SITE_VARS '$NGINX_DOCROOT'
+
 RUN wget -q -O /tmp/nginx_signing.key http://nginx.org/keys/nginx_signing.key
 RUN apt-key add /tmp/nginx_signing.key
 RUN echo "deb http://nginx.org/packages/mainline/debian/ jessie nginx" >> /etc/apt/sources.list && \
 	apt-get -qq update && \
 	apt-get -qq install --no-install-recommends --no-install-suggests -y \
         nginx=${NGINX_VERSION} \
-        libcap2-bin \
+        libcap2-bin gettext ncurses-bin \
         supervisor sudo && \
     apt-get -qq clean -y && \
 	rm -rf /var/lib/apt/lists/* && \
@@ -25,12 +29,12 @@ ADD "https://github.com/drush-ops/drush/releases/download/$DRUSH_VERSION/drush.p
 ADD "https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}/wp-cli-${WP_CLI_VERSION}.phar" /usr/bin/wp-cli
 
 ADD files /
-ADD ./bin/linux/git-sync /usr/bin/git-sync
 
 RUN rm /etc/php/7.0/cli/php.ini && \
     ln -s /etc/php/7.0/fpm/php.ini /etc/php/7.0/cli/php.ini && \
+    mkdir -p /etc/nginx/sites-available && \
     mkdir -p /etc/nginx/sites-enabled && \
-    ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
+    ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/site.conf && \
     touch /var/log/php7.0-fpm.log && \
     chown nginx:nginx /var/log/php7.0-fpm.log && \
     chown -R nginx:nginx /var/run && \
