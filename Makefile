@@ -46,7 +46,7 @@ test: container
 	@docker rm nginx-php-fpm-test 2>/dev/null || true
 	docker run -it  --rm  $$(awk '{print $$1}' .docker_image) drush --version
 	docker run -it  --rm  $$(awk '{print $$1}' .docker_image) wp --version
-	docker run --detach -p 1080:80 --name nginx-php-fpm-test $$(awk '{print $$1}' .docker_image)
+	docker run --detach -p 1080:80 -e "DOCROOT=docroot" --name nginx-php-fpm-test $$(awk '{print $$1}' .docker_image)
 	sleep 4
 	curl --fail localhost:1080/healthcheck
 	curl --fail localhost:1080/test/phptest.php
